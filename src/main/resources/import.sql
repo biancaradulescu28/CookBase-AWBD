@@ -1,8 +1,9 @@
-insert into user(id, username, email, password, role) values (1, 'bianca28', 'bianca@gmail.com', '123456', 'utilizator');
+insert into app_user(id, username, email, password, role) values (1, 'bianca28', 'bianca@gmail.com', '123456', 'utilizator');
 
 insert into user_profile(id, full_name, date_of_birth, bio, profile_picture_url, user_id) values (1, 'Radulescu Bianca', '2002-09-28', 'Utilizator', 'poza', 1);
 
 insert into recipe(id, title, description, prep_time_in_minutes, cook_time_in_minutes, servings, difficulty, author_id) values(1, 'Paste Carbonara', 'Creamy pasta carbonara is as easy as it is decadent! Using our foolproof method, the eggs are whisked with Parmesan cheese, then tossed with the pasta off the heat for a thick, creamy sauce that will not overcook. Finish with crispy chopped bacon and a sprinkling of freshly ground black pepper for a bit of savory spice in every bite.', 20, 10, 4, 'Easy', 1);
+insert into recipe(id, title, description, prep_time_in_minutes, cook_time_in_minutes, servings, difficulty, author_id) values(2, 'Paste Carbonara', 'Creamy pasta carbonara is as easy as it is decadent! Using our foolproof method, the eggs are whisked with Parmesan cheese, then tossed with the pasta off the heat for a thick, creamy sauce that will not overcook. Finish with crispy chopped bacon and a sprinkling of freshly ground black pepper for a bit of savory spice in every bite.', 20, 10, 4, 'Easy', 1);
 insert into category(id, name) values(1, 'salad');
 insert into category(id, name) values(2, 'pasta');
 insert into category(id, name) values(3, 'chicken');

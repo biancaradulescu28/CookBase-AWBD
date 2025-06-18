@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit recipe</title>
+
+    <script src="/webjars/jquery/3.7.1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/5.3.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.3/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/webjars/font-awesome/6.5.2/css/all.min.css"/>
+</head>
+<body>
+
+<div class="container mt-4">
+
+    <!-- ──────────────── top navbar (same as list page) ──────────────── -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <a class="nav-link" th:href="@{'/'}"><i class="fas fa-home mx-1"></i></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#nav" aria-controls="nav" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="nav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{'/recipes'}">Recipes</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{'/categories'}">Categories</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ────────────────────── edit form ────────────────────── -->
+    <form th:action="@{/recipes}" method="post" th:object="${recipe}">
+        <!-- hidden id for update -->
+        <input type="hidden" th:field="*{id}"/>
+
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <label class="form-label">Title</label>
+                <input class="form-control" th:field="*{title}" placeholder="Recipe title"/>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label class="form-label">Prep time (min)</label>
+                <input class="form-control" type="number" th:field="*{prepTimeInMinutes}"/>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Cook time (min)</label>
+                <input class="form-control" type="number" th:field="*{cookTimeInMinutes}"/>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Servings</label>
+                <input class="form-control" type="number" th:field="*{servings}"/>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" rows="4" th:field="*{description}"></textarea>
+        </div>
+
+        <!-- categories checkbox list -->
+        <div class="mb-4">
+            <label class="form-label">Categories</label>
+            <ul class="list-unstyled">
+                <li th:each="cat : ${categoriesAll}">
+                    <input type="checkbox"
+                           th:field="*{categories}"
+                           th:value="${cat.id}"
+                           class="form-check-input"
+                           id="cat__${cat.id}"/>
+                    <label th:for="${'cat__' + cat.id}"
+                           th:text="${cat.name}"
+                           class="form-check-label"></label>
+                </li>
+            </ul>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Save</button>
+        <a class="btn btn-secondary" th:href="@{'/recipes'}">Cancel</a>
+    </form>
+</div>
+</body>
+</html>

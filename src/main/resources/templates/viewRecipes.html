@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>AWBD Auction</title>
+
+    <script src="/webjars/jquery/3.7.1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/5.3.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.3/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/webjars/font-awesome/6.5.2/css/all.min.css"/>
+</head>
+<body>
+<div class="container">
+    <table class="table table-hover">
+        <thead class="thead-inverse">
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Cook Time</th>
+            <th>Prep Time</th>
+            <th>Servings</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="recipe, stat : ${recipes}" th:class="${stat.odd} ? 'table-light' : ''">
+            <td th:text="${recipe.id}">1</td>
+            <td th:text="${recipe.title}">Title</td>
+            <td th:text="${recipe.cookTimeInMinutes}">Cook Time</td>
+            <td th:text="${recipe.prepTimeInMinutes}">Prep Time</td>
+            <td th:text="${recipe.servings}">Servings</td>
+            <td th:text="${recipe.description}">Description</td>
+            <td th:text="${#strings.listJoin(recipe.categories, ', ')}"></td>
+
+            <td><a href="#" th:href="@{'/recipes/edit/' + ${recipe.id}}"><i class="fa-solid fa-pen"></i></a></td>
+            <td><a href="#" th:href="@{'/recipes/delete/' + ${recipe.id}}"><i class="fa-solid fa-trash"></i></a></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>
+
