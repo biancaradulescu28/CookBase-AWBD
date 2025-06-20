@@ -3,9 +3,13 @@ package com.awbd.cookbase.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
 @Entity
+@Setter
+@Getter
 public class Ingredient {
 
     @Id

@@ -31,7 +31,9 @@
             <td th:text="${recipe.servings}">Servings</td>
             <td th:text="${recipe.description}">Description</td>
             <td th:text="${#strings.listJoin(recipe.categories, ', ')}"></td>
-
+            <td>
+                <a th:href="@{'/recipes/' + ${recipe.id}}"><i class="fa-solid fa-eye"></i></a>
+            </td>
             <td><a href="#" th:href="@{'/recipes/edit/' + ${recipe.id}}"><i class="fa-solid fa-pen"></i></a></td>
             <td><a href="#" th:href="@{'/recipes/delete/' + ${recipe.id}}"><i class="fa-solid fa-trash"></i></a></td>
         </tr>

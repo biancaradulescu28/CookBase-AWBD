@@ -27,6 +27,14 @@ public interface RecipeRepository extends PagingAndSortingRepository<Recipe, Lon
        """)
     Iterable<Recipe> findAllWithCategories(org.springframework.data.domain.Sort sort);
 
+    @Query("""
+   select r
+   from Recipe r
+   left join fetch r.categories          
+   where r.id = :id
+   """)
+    Optional<Recipe> findByIdWithDetails(@Param("id") Long id);
+
 
 
 }

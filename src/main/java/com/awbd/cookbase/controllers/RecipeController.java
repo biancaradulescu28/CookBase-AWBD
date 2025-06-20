@@ -57,4 +57,11 @@ public class RecipeController {
         return "redirect:/recipes";   // go back to the table
     }
 
+    @GetMapping("/{id}")
+    public String showRecipe(@PathVariable Long id, Model model) {
+        RecipeDTO recipe = recipeService.findDetailsById(id);   // ← NEW
+        model.addAttribute("recipe", recipe);
+        return "recipeDetails";
+    }
+
 }

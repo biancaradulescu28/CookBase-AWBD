@@ -1,53 +1,88 @@
 package com.awbd.cookbase.services;
 
-import com.awbd.cookbase.exceptions.ResourceNotFoundException;
-import com.awbd.cookbase.domain.Category;
-import com.awbd.cookbase.domain.Recipe;
-import com.awbd.cookbase.dtos.RecipeDTO;
+import com.awbd.cookbase.domain.*;
+import com.awbd.cookbase.dtos.*;
+import com.awbd.cookbase.mappers.*;
 import com.awbd.cookbase.repositories.CategoryRepository;
 import com.awbd.cookbase.repositories.RecipeRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
+@Transactional
 public class RecipeServiceImpl implements RecipeService {
 
-    private final RecipeRepository recipeRepository;
-    private final ModelMapper modelMapper;
+    private final RecipeRepository   recipeRepository;
+    private final ModelMapper        modelMapper;
     private final CategoryRepository categoryRepository;
+    private final IngredientMapper   ingredientMapper;
+    private final StepMapper         stepMapper;
+    private final ReviewMapper       reviewMapper;
 
-    public RecipeServiceImpl(RecipeRepository recipeRepository,
-                             ModelMapper modelMapper, CategoryRepository categoryRepository) {
+    public RecipeServiceImpl(RecipeRepository   recipeRepository,
+                             ModelMapper        modelMapper,
+                             CategoryRepository categoryRepository,
+                             IngredientMapper   ingredientMapper,
+                             StepMapper         stepMapper,
+                             ReviewMapper       reviewMapper) {
+
         this.recipeRepository = recipeRepository;
         this.modelMapper = modelMapper;
         this.categoryRepository = categoryRepository;
+        this.ingredientMapper = ingredientMapper;
+        this.stepMapper = stepMapper;
+        this.reviewMapper = reviewMapper;
     }
 
     @Override
     public List<RecipeDTO> findAll() {
+        var src = recipeRepository.findAllWithCategories(Sort.by("title"));
+        return StreamSupport.stream(src.spliterator(), false)
+                .map(this::toDtoSummary)
+                .collect(Collectors.toList());
+    }
 
-        return StreamSupport
-                .stream(recipeRepository
-                        .findAllWithCategories(Sort.by("id"))
-                        .spliterator(), false)
-                .map(r -> {
-                    RecipeDTO dto = modelMapper.map(r, RecipeDTO.class);
+    @Override
+    public RecipeDTO findById(Long id) {
+        var entity = recipeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(id.toString()));
+        return toDtoSummary(entity);
+    }
 
-                    // convert List<Category> → List<String>
-                    dto.setCategories(
-                            r.getCategories()
-                                    .stream()
-                                    .map(Category::getName)
-                                    .toList());
+    @Override
+    public RecipeDTO findDetailsById(Long id) {
+        var entity = recipeRepository.findByIdWithDetails(id)
+                .orElseThrow(() -> new EntityNotFoundException(id.toString()));
+        entity.getIngredients().size();
+        entity.getSteps().size();
+        entity.getReviews().size();
+        return toDtoFull(entity);
+    }
 
-                    return dto;
-                })
-                .toList();
+    @Override
+    public RecipeDTO save(RecipeDTO dto) {
+        var entity = modelMapper.map(dto, Recipe.class);
+
+        if (entity.getCategories() != null) {
+            var managed = entity.getCategories().stream()
+                    .filter(c -> c.getId() != null)
+                    .map(c -> categoryRepository.findById(c.getId())
+                            .orElseThrow(() ->
+                                    new EntityNotFoundException(c.getId().toString())))
+                    .collect(Collectors.toList());
+            entity.setCategories(managed);
+        }
+
+        var saved = recipeRepository.save(entity);
+        return modelMapper.map(saved, RecipeDTO.class);
     }
 
     @Override
@@ -55,40 +90,31 @@ public class RecipeServiceImpl implements RecipeService {
         recipeRepository.deleteById(id);
     }
 
-    @Override
-    public RecipeDTO findById(Long l) {
-        Optional<Recipe> productOptional = recipeRepository.findById(l);
-        if (!productOptional.isPresent()) {
-            throw new ResourceNotFoundException("product " + l + " not found");
-            //throw new RuntimeException("Product not found!");
-        }
-        return modelMapper.map(productOptional.get(), RecipeDTO.class);
+    private RecipeDTO toDtoSummary(Recipe r) {
+        var dto = modelMapper.map(r, RecipeDTO.class);
+        dto.setCategories(r.getCategories().stream()
+                .map(Category::getName)
+                .collect(Collectors.toList()));
+        return dto;
     }
 
-    @Override
-    public RecipeDTO save(RecipeDTO dto) {
+    private RecipeDTO toDtoFull(Recipe r) {
+        var dto = toDtoSummary(r);
 
-        // 1. convert DTO ➜ entity (as you already did)
-        Recipe recipe = modelMapper.map(dto, Recipe.class);
+        dto.setIngredients(r.getIngredients().stream()
+                .map(ingredientMapper::toDto)
+                .collect(Collectors.toList()));
 
-    /* 2. Replace the detached Category objects with managed ones.
-          (If dto carries ids NULL, they’ll be ignored.)               */
-        if (recipe.getCategories() != null) {
-            List<Category> managed =
-                    recipe.getCategories()
-                            .stream()
-                            .filter(c -> c.getId() != null)          // ignore new / empty
-                            .map(c -> categoryRepository.findById(c.getId())
-                                    .orElseThrow(() ->
-                                            new ResourceNotFoundException(
-                                                    "Category " + c.getId() + " not found")))
-                            .toList();
+        dto.setSteps(r.getSteps().stream()
+                .sorted(Comparator.comparingInt(Step::getStepNumber))
+                .map(stepMapper::toDto)
+                .collect(Collectors.toList()));
 
-            recipe.setCategories(managed);
-        }
+        dto.setReviews(r.getReviews().stream()
+                .sorted(Comparator.comparing(Review::getCreatedAt))
+                .map(reviewMapper::toDto)
+                .collect(Collectors.toList()));
 
-        Recipe saved = recipeRepository.save(recipe);
-        return modelMapper.map(saved, RecipeDTO.class);
+        return dto;
     }
-
 }

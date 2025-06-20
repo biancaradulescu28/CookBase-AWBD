@@ -1,5 +1,6 @@
 package com.awbd.cookbase.services;
 
+import com.awbd.cookbase.domain.Recipe;
 import com.awbd.cookbase.dtos.RecipeDTO;
 
 
@@ -13,4 +14,6 @@ public interface RecipeService {
     void deleteById(Long id);
     RecipeDTO findById(Long l);
     RecipeDTO save(RecipeDTO recipe);
+    RecipeDTO findDetailsById(Long id);
+
 }

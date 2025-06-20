@@ -6,6 +6,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
+
 @Configuration
 public class ModelMapperConfig {
     @Bean
@@ -13,11 +15,15 @@ public class ModelMapperConfig {
         ModelMapper mm = new ModelMapper();
         mm.getConfiguration()
                 .setFieldMatchingEnabled(true)
-                .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
+                .setFieldAccessLevel(PRIVATE);
 
         mm.typeMap(Recipe.class, RecipeDTO.class)
-                .addMappings(m -> m.skip(RecipeDTO::setCategories));
-
+                .addMappings(m -> {
+                    m.skip(RecipeDTO::setCategories);
+                    m.skip(RecipeDTO::setIngredients);
+                    m.skip(RecipeDTO::setSteps);
+                    m.skip(RecipeDTO::setReviews);
+                });
         return mm;
 
 
