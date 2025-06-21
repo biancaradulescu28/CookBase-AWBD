@@ -20,7 +20,7 @@ public class User {
     private String password;
     private String role;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserProfile profile;
 
     @OneToMany(mappedBy = "author")

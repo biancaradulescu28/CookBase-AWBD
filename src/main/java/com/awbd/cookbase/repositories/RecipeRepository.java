@@ -15,7 +15,11 @@ import java.util.Optional;
 public interface RecipeRepository extends PagingAndSortingRepository<Recipe, Long> {
 
     Optional<Recipe> findById (Long id);
-   /// Optional<Recipe> findByName (String name);
+
+   Optional<Recipe> findByTitle(String title);
+
+    List<Recipe> findByTitleLike(String titlePattern);
+
 
     void deleteById(Long id);
     Recipe save(Recipe recipe);
