@@ -1,14 +1,12 @@
-insert into user(id, username, password, account_non_expired, account_non_locked, credentials_non_expired, enabled)
-values (1, 'user', '$2a$10$rdBxY15bOyQI9.pWtzqYWuJcPsKj9AExMnxTA5ZuCMWIcsqWWvfw6', true, true, true, true);
+insert into app_user(id, username, password, account_non_expired, account_non_locked, credentials_non_expired, enabled) values (1, 'user', '$2a$10$rdBxY15bOyQI9.pWtzqYWuJcPsKj9AExMnxTA5ZuCMWIcsqWWvfw6', true, true, true, true);
 
-insert into user(id, username, password, account_non_expired, account_non_locked, credentials_non_expired, enabled)
-values (2, 'admin', '$2a$10$U6pgXrcQc7d32YhWbcTjOuH.u3AgjB.VLyxh5.RSbGeAiXl5pwM.S', true, true, true, true);
+insert into app_user(id, username, password, account_non_expired, account_non_locked, credentials_non_expired, enabled) values (2, 'admin', '$2a$10$U6pgXrcQc7d32YhWbcTjOuH.u3AgjB.VLyxh5.RSbGeAiXl5pwM.S', true, true, true, true);
 
 insert into authority(id, role) values (1, 'ROLE_GUEST');
 insert into authority(id, role) values (2, 'ROLE_ADMIN');
 
-insert into user_authorities(user_id, authorities_id) values (1, 1);
-insert into user_authorities(user_id, authorities_id) values (2, 2);
+insert into app_user_authority (app_user_id, authority_id) values (1, 1);
+insert into app_user_authority (app_user_id, authority_id) values (2, 2);
 
 
 insert into user_profile(id, full_name, date_of_birth, bio, profile_picture_url, user_id) values (1, 'Radulescu Bianca', '2002-09-28', 'Utilizator', 'poza', 1);

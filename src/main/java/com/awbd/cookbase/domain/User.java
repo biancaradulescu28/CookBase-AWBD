@@ -19,6 +19,7 @@ import java.util.List;
 @Getter
 @Builder
 @Entity
+@Table(name = "app_user")
 public class User {
 
     @Id
@@ -39,7 +40,7 @@ public class User {
 
     @Singular
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(name = "user_authority", joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")}, inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")})
+    @JoinTable(name = "app_user_authority", joinColumns = {@JoinColumn(name = "APP_USER_ID", referencedColumnName = "ID")}, inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")})
     private Set<Authority> authorities;
 
     @Builder.Default
