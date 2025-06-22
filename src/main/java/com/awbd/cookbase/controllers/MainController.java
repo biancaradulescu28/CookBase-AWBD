@@ -15,4 +15,10 @@ public class MainController {
     public String showMainPage() {
         return "main"; // this resolves to templates/main.html
     }
+
+    @GetMapping("/login")
+    public String showLogInForm(){ return "login"; }
+
+    @GetMapping("/access_denied")
+    public String accessDeniedPage(){ return "accessDenied"; }
 }

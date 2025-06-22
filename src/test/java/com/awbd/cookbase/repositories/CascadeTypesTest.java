@@ -31,7 +31,6 @@ public class CascadeTypesTest {
         user.setUsername("newuser");
         user.setEmail("newuser@example.com");
         user.setPassword("pass123");
-        user.setRole("utilizator");
 
         Recipe recipe = new Recipe();
         recipe.setTitle("Test Recipe");

@@ -27,7 +27,7 @@ public class UserRepositoryTest {
     @Test
     public void findByUsername_shouldReturnUser() {
 
-        Optional<User> userOpt = userRepository.findByUsername("bianca28");
+        Optional<User> userOpt = userRepository.findByUsername("user1");
 
         assertFalse(userOpt.isEmpty());
         log.info("Found imported user: {}", userOpt.get().getUsername());
