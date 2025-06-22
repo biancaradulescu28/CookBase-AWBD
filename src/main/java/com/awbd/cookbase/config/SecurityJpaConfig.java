@@ -36,7 +36,8 @@ public class SecurityJpaConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/webjars/**", "/login", "/register", "/resources/**", "/css/**", "/js/**", "/images/**").permitAll()
 //                        .requestMatchers("/products/form").hasRole("ADMIN")
-                        .requestMatchers("/main/*", "/recipes", "/recipes/**", "/error" ).hasAnyRole("ADMIN", "GUEST")
+                        .requestMatchers("/main/*", "/recipes", "/recipes/form", "/recipes/form", "/error" ).hasAnyRole("ADMIN", "GUEST")
+                                .requestMatchers( "/recipes/edit", "/recipes/delete", "/error" ).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf

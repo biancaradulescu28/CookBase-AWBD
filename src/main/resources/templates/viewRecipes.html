@@ -2,46 +2,69 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>AWBD Auction</title>
-
+    <title>AWBD Recipes</title>
     <script src="/webjars/jquery/3.7.1/jquery.min.js"></script>
     <script src="/webjars/bootstrap/5.3.3/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/webjars/bootstrap/5.3.3/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/webjars/font-awesome/6.5.2/css/all.min.css"/>
 </head>
 <body>
-<div class="container">
-    <table class="table table-hover">
-        <thead class="thead-inverse">
-        <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Cook Time</th>
-            <th>Prep Time</th>
-            <th>Servings</th>
-            <th>Description</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="recipe, stat : ${recipes}" th:class="${stat.odd} ? 'table-light' : ''">
-            <td th:text="${recipe.id}">1</td>
-            <td th:text="${recipe.title}">Title</td>
-            <td th:text="${recipe.cookTimeInMinutes}">Cook Time</td>
-            <td th:text="${recipe.prepTimeInMinutes}">Prep Time</td>
-            <td th:text="${recipe.servings}">Servings</td>
-            <td th:text="${recipe.description}">Description</td>
-            <td th:text="${#strings.listJoin(recipe.categories, ', ')}"></td>
-            <td>
-                <a th:href="@{'/recipes/' + ${recipe.id}}"><i class="fa-solid fa-eye"></i></a>
-            </td>
-            <td><a href="#" th:href="@{'/recipes/edit/' + ${recipe.id}}"><i class="fa-solid fa-pen"></i></a></td>
-            <td><a href="#" th:href="@{'/recipes/delete/' + ${recipe.id}}"><i class="fa-solid fa-trash"></i></a></td>
-        </tr>
-        </tbody>
-    </table>
+<div class="container mt-3">
+
+    <form method="get" th:action="@{/recipes}">
+
+        <div class="row gy-2 gx-2 align-items-center mb-3">
+            <div class="col-auto">
+                <select class="form-select" name="catId" th:value="${param.catId}">
+                    <option value="">All categories</option>
+                    <option th:each="c : ${categoriesAll}"
+                            th:value="${c.id}"
+                            th:text="${c.name}"
+                            th:selected="${c.id == param.catId}">
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Cook Time</th>
+                <th>Prep Time</th>
+                <th>Servings</th>
+                <th>Description</th>
+                <th>Categories</th>
+                <th></th><th></th><th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="recipe, stat : ${recipes}" th:class="${stat.odd} ? 'table-light' : null">
+                <td th:text="${recipe.title}">Title</td>
+                <td th:text="${recipe.cookTimeInMinutes}">0</td>
+                <td th:text="${recipe.prepTimeInMinutes}">0</td>
+                <td th:text="${recipe.servings}">0</td>
+                <td th:text="${recipe.description}">-</td>
+                <td th:text="${#strings.listJoin(recipe.categories, ', ')}">-</td>
+                <td><a th:href="@{'/recipes/' + ${recipe.id}}"><i class="fa-solid fa-eye"></i></a></td>
+                <td><a th:href="@{'/recipes/edit/' + ${recipe.id}}"><i class="fa-solid fa-pen"></i></a></td>
+                <td><a th:href="@{'/recipes/delete/' + ${recipe.id}}"><i class="fa-solid fa-trash"></i></a></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between mb-3">
+            <a class="btn btn-primary" th:href="@{/recipes/form}">
+                <i class="fa fa-plus-circle"></i> Add recipe
+            </a>
+            <div>
+                <button class="btn btn-outline-primary me-2" type="submit">Filter</button>
+                <a class="btn btn-link" th:href="@{/recipes}">Reset</a>
+            </div>
+        </div>
+
+    </form>
 
 </div>
-
 </body>
 </html>
-

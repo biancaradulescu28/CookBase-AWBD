@@ -4,6 +4,7 @@ import com.awbd.cookbase.domain.Recipe;
 import com.awbd.cookbase.dtos.CategoryDTO;
 import com.awbd.cookbase.dtos.RecipeDTO;
 import com.awbd.cookbase.services.CategoryService;
+import com.awbd.cookbase.services.IngredientService;
 import com.awbd.cookbase.services.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,19 +22,35 @@ public class RecipeController {
 
     RecipeService recipeService;
     CategoryService categoryService;
+    IngredientService ingredientService;
 
-    public RecipeController(RecipeService recipeService, CategoryService categoryService) {
+    public RecipeController(RecipeService recipeService, CategoryService categoryService, IngredientService ingredientService) {
         this.recipeService = recipeService;
         this.categoryService = categoryService;
+        this.ingredientService = ingredientService;
+
     }
 
     @RequestMapping({"", "/"})
     public String viewRecipes(Model model) {
-        List<RecipeDTO> recipes = recipeService.findAll();
+
+        String catIdParam =
+                ((org.springframework.web.context.request.ServletRequestAttributes)
+                        org.springframework.web.context.request.RequestContextHolder
+                                .getRequestAttributes())
+                        .getRequest()
+                        .getParameter("catId");
+
+        List<RecipeDTO> recipes = (catIdParam == null || catIdParam.isBlank())
+                ? recipeService.findAll()
+                : recipeService.findAllByCategory(Long.valueOf(catIdParam));
+
         model.addAttribute("recipes", recipes);
+        model.addAttribute("categoriesAll", categoryService.findAll());
+
+
         return "viewRecipes";
     }
-
 
     @RequestMapping("/delete/{id}")
     public String deleteById(@PathVariable String id){
@@ -59,9 +76,46 @@ public class RecipeController {
 
     @GetMapping("/{id}")
     public String showRecipe(@PathVariable Long id, Model model) {
-        RecipeDTO recipe = recipeService.findDetailsById(id);   // ← NEW
+        RecipeDTO recipe = recipeService.findDetailsById(id);
         model.addAttribute("recipe", recipe);
+        model.addAttribute("ingredientsAll", ingredientService.findAll());
         return "recipeDetails";
+    }
+
+    @PostMapping("/{id}/ingredients")
+    public String addIngredient(@PathVariable Long id,
+                                @RequestParam(required = false) Long ingredientId,
+                                @RequestParam(required = false) String newName,
+                                @RequestParam(required = false) String quantity) {
+
+        recipeService.addIngredient(id, ingredientId, newName, quantity);
+        return "redirect:/recipes/" + id;
+    }
+
+    @PostMapping("/{id}/steps")
+    public String addStep(@PathVariable Long id,
+                          @RequestParam int stepNumber,
+                          @RequestParam String instruction) {
+        recipeService.addStep(id, stepNumber, instruction);
+        return "redirect:/recipes/" + id;
+    }
+
+    @PostMapping("/{id}/reviews")
+    public String addReview(@PathVariable Long id,
+                            @RequestParam int rating,
+                            @RequestParam String comment) {
+        recipeService.addReview(id, rating, comment);
+        return "redirect:/recipes/" + id;
+    }
+
+
+    @RequestMapping("/form")
+    public String recipeForm(Model model) {
+        RecipeDTO recipe = new RecipeDTO();
+        model.addAttribute("recipe",  recipe);
+        List<CategoryDTO> categoriesAll = categoryService.findAll();
+        model.addAttribute("categoriesAll", categoriesAll );
+        return "recipeForm";
     }
 
 }

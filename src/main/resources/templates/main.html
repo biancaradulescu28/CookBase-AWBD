@@ -23,15 +23,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
-          <a class="nav-link" th:href="@{'/products'}">Products</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{'/categories/list'}">Categories</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link btn btn-sm btn-primary text-white" th:href="@{'/products/form'}">
-            <i class="fas fa-plus-circle"></i> Sell
-          </a>
+          <a class="btn btn-success" th:href="@{'/recipes'}">View Recipes</a>
         </li>
       </ul>
       <ul class="navbar-nav ms-auto">
@@ -41,7 +33,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link btn btn-sm btn-outline-secondary" th:href="@{'/participant/form'}">
+          <a class="nav-link btn btn-sm btn-outline-secondary" th:href="@{'/register'}">
             <i class="fas fa-user-plus"></i> Register
           </a>
         </li>
@@ -52,7 +44,7 @@
   <div class="text-center mt-5">
     <h1>Welcome to CookBase</h1>
     <p class="lead">Explore, cook, share recipes and more!</p>
-    <a class="btn btn-success" th:href="@{'/recipes'}">View Recipes</a>
+
   </div>
 </div>
 </body>

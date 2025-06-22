@@ -3,73 +3,127 @@
 <head>
     <meta charset="UTF-8"/>
     <title th:text="${recipe.title}">Recipe</title>
-
-    <link rel="stylesheet"
-          href="/webjars/bootstrap/5.3.3/css/bootstrap.min.css"/>
+    <script src="/webjars/jquery/3.7.1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.3/css/bootstrap.min.css"/>
 </head>
 <body class="container mt-4">
 
-
-<a class="btn btn-outline-secondary mb-3"
-   th:href="@{'/recipes'}">← All recipes</a>
+<a class="btn btn-outline-secondary mb-3" th:href="@{/recipes}">← All recipes</a>
 
 <h2 th:text="${recipe.title}">Title</h2>
-
 <p class="lead" th:text="${recipe.description}">Description</p>
 
 <table class="table w-auto">
-    <tr><th>Prep&nbsp;(min)</th><td th:text="${recipe.prepTimeInMinutes}">10</td></tr>
-    <tr><th>Cook&nbsp;(min)</th><td th:text="${recipe.cookTimeInMinutes}">20</td></tr>
-    <tr><th>Servings</th>      <td th:text="${recipe.servings}">4</td></tr>
-    <tr>
-        <th>Categories</th>
-
-        <td th:text="${#strings.listJoin(recipe.categories, ', ')}">
-            Dessert, Vegan
-        </td>
-    </tr>
+    <tr><th>Prep&nbsp;(min)</th><td th:text="${recipe.prepTimeInMinutes}"></td></tr>
+    <tr><th>Cook&nbsp;(min)</th><td th:text="${recipe.cookTimeInMinutes}"></td></tr>
+    <tr><th>Servings</th><td th:text="${recipe.servings}"></td></tr>
+    <tr><th>Categories</th><td th:text="${#strings.listJoin(recipe.categories, ', ')}"></td></tr>
 </table>
 
-
 <h4>Ingredients</h4>
-<ul class="list-group mb-4">
-    <li class="list-group-item"
-        th:each="ing : ${recipe.ingredients}"
-        th:text="${ing.quantity + ' ' + ing.name}">
-        2&nbsp;cups&nbsp;flour
-    </li>
+<ul class="list-group mb-3">
+    <li class="list-group-item" th:each="ing : ${recipe.ingredients}" th:text="${ing.name + ' ' + ing.quantity}"></li>
 </ul>
-
+<button class="btn btn-sm btn-outline-primary mb-4" data-bs-toggle="modal" data-bs-target="#addIng">Add ingredient</button>
 
 <h4>Steps</h4>
-<ol class="list-group list-group-numbered mb-4">
-
+<ol class="list-group mb-3">
     <li class="list-group-item"
-        th:each="st : ${recipe.steps}"
-        th:text="${st.instruction}">
-        Mix everything…
+        th:each="st : ${recipe.steps}">
+        <strong th:text="${st.stepNumber + '.'}"></strong>
+        <span th:text="${st.instruction}"></span>
     </li>
 </ol>
+<button class="btn btn-sm btn-outline-primary mb-4" data-bs-toggle="modal" data-bs-target="#addStep">Add step</button>
 
-
-<h4 th:text="'Reviews (' + ${recipe.reviews.size()} + ')'">Reviews</h4>
-<table class="table table-sm">
-    <thead>
-    <tr><th>#</th><th>Rating</th><th>Comment</th><th>By</th><th>At</th></tr>
-    </thead>
+<h4 th:text="'Reviews (' + ${recipe.reviews.size()} + ')'"></h4>
+<table class="table table-sm mb-3">
+    <thead><tr><th>Rating</th><th>Comment</th><th>By</th><th>At</th></tr></thead>
     <tbody>
-
     <tr th:each="rev, stat : ${recipe.reviews}">
-        <td th:text="${stat.count}">1</td>
-        <td th:text="${rev.rating}">5</td>
-        <td th:text="${rev.comment}">Great!</td>
-        <td th:text="${rev.reviewerUsername}">alice</td>
-        <td th:text="${#temporals.format(rev.createdAt, 'yyyy-MM-dd HH:mm')}">
-            2025-06-18&nbsp;20:00
-        </td>
+        <td th:text="${rev.rating}"></td>
+        <td th:text="${rev.comment}"></td>
+        <td th:text="${rev.reviewerUsername}"></td>
+        <td th:text="${#temporals.format(rev.createdAt,'yyyy-MM-dd HH:mm')}"></td>
     </tr>
     </tbody>
 </table>
+<button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addReview">Add review</button>
+
+<div class="modal fade" id="addIng">
+    <div class="modal-dialog">
+        <form class="modal-content" th:action="@{|/recipes/${recipe.id}/ingredients|}" method="post">
+            <div class="modal-header"><h5 class="modal-title">Add ingredient</h5></div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Existing ingredient</label>
+                    <select class="form-select" name="ingredientId">
+                        <option value="">-- choose --</option>
+                        <option th:each="i : ${ingredientsAll}"
+                                th:value="${i.id}"
+                                th:data-qty="${i.quantity}"
+                                th:text="${i.name + ' (' + i.quantity + ')'}"></option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Or new ingredient name</label>
+                    <input class="form-control" name="newName"/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Quantity</label>
+                    <input class="form-control" name="quantity"/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="addStep">
+    <div class="modal-dialog">
+        <form class="modal-content" th:action="@{|/recipes/${recipe.id}/steps|}" method="post">
+            <div class="modal-header"><h5 class="modal-title">Add step</h5></div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Step number</label>
+                    <input class="form-control" name="stepNumber" type="number" value="0"/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Instruction</label>
+                    <textarea class="form-control" name="instruction"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addReview">
+    <div class="modal-dialog">
+        <form class="modal-content" th:action="@{|/recipes/${recipe.id}/reviews|}" method="post">
+            <div class="modal-header"><h5 class="modal-title">Add review</h5></div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Rating (1-5)</label>
+                    <input class="form-control" name="rating" type="number" min="1" max="5"/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Comment</label>
+                    <textarea class="form-control" name="comment"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 </body>
 </html>

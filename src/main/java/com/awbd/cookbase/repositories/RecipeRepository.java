@@ -39,6 +39,16 @@ public interface RecipeRepository extends PagingAndSortingRepository<Recipe, Lon
    """)
     Optional<Recipe> findByIdWithDetails(@Param("id") Long id);
 
+    @Query("""
+   select distinct r
+   from Recipe r
+   join r.categories c
+   where c.id = :catId
+   order by r.title
+   """)
+    List<Recipe> findAllByCategoryId(@Param("catId") Long catId);
+
+
 
 
 }

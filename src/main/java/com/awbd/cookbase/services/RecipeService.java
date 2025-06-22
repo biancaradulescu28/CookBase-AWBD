@@ -15,5 +15,10 @@ public interface RecipeService {
     RecipeDTO findById(Long l);
     RecipeDTO save(RecipeDTO recipe);
     RecipeDTO findDetailsById(Long id);
+    List<RecipeDTO> findAllByCategory(Long categoryId);
+    void addIngredient(Long recipeId, Long ingredientId, String newName, String quantity);
+    void addStep(Long recipeId, int stepNumber, String instruction);
+    void addReview(Long recipeId, int rating, String comment);
+
 
 }

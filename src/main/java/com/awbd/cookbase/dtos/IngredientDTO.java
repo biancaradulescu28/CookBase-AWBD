@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 public class IngredientDTO {
     private Long   id;
-    private String quantity;
     private String name;
+    private String quantity;
+
 }
