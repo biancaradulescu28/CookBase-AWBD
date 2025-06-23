@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
@@ -10,6 +10,51 @@
 
 <body>
 <div class="container" style="margin-top: 20px">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mt-3 mb-4">
+        <a class="navbar-brand" th:href="@{/}">
+            <i class="fas fa-utensils"></i> CookBase
+        </a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navBar" aria-controls="navBar"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navBar">
+
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="btn btn-success" th:href="@{/recipes}">View Recipes</a>
+                </li>
+            </ul>
+
+
+            <ul class="navbar-nav ms-auto" sec:authorize="isAnonymous()">
+                <li class="nav-item">
+                    <a class="nav-link btn btn-sm btn-outline-primary" th:href="@{/login}">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-sm btn-outline-secondary" th:href="@{/register}">
+                        <i class="fas fa-user-plus"></i> Register
+                    </a>
+                </li>
+            </ul>
+
+
+            <ul class="navbar-nav ms-auto" sec:authorize="isAuthenticated()">
+                <span class="d-block">Welcome, </span>
+                <a class="fw-bold text-primary"
+                   th:text="${#authentication.name}">
+                    username
+                </a>
+            </ul>
+
+        </div>
+    </nav>
+
     <div class="col-md-6 col-md-offset-3">
         403 - access denied!
     </div>

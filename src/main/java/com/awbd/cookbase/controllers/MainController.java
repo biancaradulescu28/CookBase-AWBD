@@ -13,7 +13,7 @@ public class MainController {
 
     @GetMapping("/main")
     public String showMainPage() {
-        return "main"; // this resolves to templates/main.html
+        return "main";
     }
 
     @GetMapping("/login")
@@ -21,4 +21,9 @@ public class MainController {
 
     @GetMapping("/access_denied")
     public String accessDeniedPage(){ return "accessDenied"; }
+
+    @GetMapping("/logout")
+    public String logout(){ return "login"; }
+
+
 }

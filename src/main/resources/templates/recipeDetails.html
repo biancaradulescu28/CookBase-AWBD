@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
     <title th:text="${recipe.title}">Recipe</title>
@@ -8,6 +8,58 @@
     <link rel="stylesheet" href="/webjars/bootstrap/5.3.3/css/bootstrap.min.css"/>
 </head>
 <body class="container mt-4">
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light mt-3 mb-4">
+    <a class="navbar-brand" th:href="@{/}">
+        <i class="fas fa-utensils"></i> CookBase
+    </a>
+
+    <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse" data-bs-target="#navBar"
+            aria-controls="navBar" aria-expanded="false"
+            aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navBar">
+
+        <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+                <a class="btn btn-success" th:href="@{/recipes}">View Recipes</a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav ms-auto" sec:authorize="isAnonymous()">
+            <li class="nav-item">
+                <a class="nav-link btn btn-sm btn-outline-primary" th:href="@{/login}">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn btn-sm btn-outline-secondary" th:href="@{/register}">
+                    <i class="fas fa-user-plus"></i> Register
+                </a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav ms-auto align-items-center" sec:authorize="isAuthenticated()">
+            <span class="me-1">Welcome,</span>
+            <li class="nav-item">
+                <a class="nav-link fw-bold text-primary" href="#"
+                   th:text="${#authentication.name}">username</a>
+            </li>
+            <li class="nav-item">
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button class="btn btn-sm btn-outline-danger ms-2" type="submit">
+                        <i class="fas fa-sign-out-alt"></i> Log out
+                    </button>
+                </form>
+            </li>
+        </ul>
+
+    </div>
+</nav>
+
 
 <a class="btn btn-outline-secondary mb-3" th:href="@{/recipes}">← All recipes</a>
 

@@ -8,6 +8,7 @@ import com.awbd.cookbase.services.IngredientService;
 import com.awbd.cookbase.services.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +53,7 @@ public class RecipeController {
         return "viewRecipes";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping("/delete/{id}")
     public String deleteById(@PathVariable String id){
         recipeService.deleteById(Long.valueOf(id));
@@ -61,17 +63,17 @@ public class RecipeController {
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable Long id, Model model) {
         RecipeDTO dto = recipeService.findById(id);
-        model.addAttribute("recipe", dto);               // ①  use the same key as the form
+        model.addAttribute("recipe", dto);
         model.addAttribute("categoriesAll", categoryService.findAll());
-        return "recipeForm";                             // ②  file name WITHOUT .html
+        return "recipeForm";
     }
 
-    @PostMapping        // handles POST /recipes
+    @PostMapping
     public String saveOrUpdate(@ModelAttribute("recipe") RecipeDTO recipe) {
 
-        recipeService.save(recipe);   // insert or update
+        recipeService.save(recipe);
 
-        return "redirect:/recipes";   // go back to the table
+        return "redirect:/recipes";
     }
 
     @GetMapping("/{id}")
