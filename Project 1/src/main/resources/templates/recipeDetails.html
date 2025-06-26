@@ -91,12 +91,11 @@
 
 <h4 th:text="'Reviews (' + ${recipe.reviews.size()} + ')'"></h4>
 <table class="table table-sm mb-3">
-    <thead><tr><th>Rating</th><th>Comment</th><th>By</th><th>At</th></tr></thead>
+    <thead><tr><th>Rating</th><th>Comment</th><th>At</th></tr></thead>
     <tbody>
     <tr th:each="rev, stat : ${recipe.reviews}">
         <td th:text="${rev.rating}"></td>
         <td th:text="${rev.comment}"></td>
-        <td th:text="${rev.reviewerUsername}"></td>
         <td th:text="${#temporals.format(rev.createdAt,'yyyy-MM-dd HH:mm')}"></td>
     </tr>
     </tbody>

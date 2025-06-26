@@ -12,13 +12,14 @@ insert into app_user_authority (app_user_id, authority_id) values (2, 2);
 insert into user_profile(id, full_name, date_of_birth, bio, profile_picture_url, user_id) values (1, 'Radulescu Bianca', '2002-09-28', 'Utilizator', 'poza', 1);
 
 insert into recipe(id, title, description, prep_time_in_minutes, cook_time_in_minutes, servings, difficulty, author_id) values(1, 'Paste Carbonara', 'Creamy pasta carbonara is as easy as it is decadent! Using our foolproof method, the eggs are whisked with Parmesan cheese, then tossed with the pasta off the heat for a thick, creamy sauce that will not overcook. Finish with crispy chopped bacon and a sprinkling of freshly ground black pepper for a bit of savory spice in every bite.', 20, 10, 4, 'Easy', 1);
-insert into recipe(id, title, description, prep_time_in_minutes, cook_time_in_minutes, servings, difficulty, author_id) values(2, 'Paste Carbonara', 'Creamy pasta carbonara is as easy as it is decadent! Using our foolproof method, the eggs are whisked with Parmesan cheese, then tossed with the pasta off the heat for a thick, creamy sauce that will not overcook. Finish with crispy chopped bacon and a sprinkling of freshly ground black pepper for a bit of savory spice in every bite.', 20, 10, 4, 'Easy', 1);
 insert into recipe(id, title, description, prep_time_in_minutes, cook_time_in_minutes, servings, difficulty, author_id) values (3, 'Chocolate Cake', 'Rich and moist chocolate cake', 20, 40, 8, 'Medium', 1);
+insert into recipe(id, title, description, prep_time_in_minutes, cook_time_in_minutes, servings, difficulty, author_id) values (4, 'Chicken Noodle Soup','Classic homemade chicken noodle soup with tender chicken, fresh vegetables and egg noodles simmered in a savoury broth.',15, 30, 6, 'Easy', 1);
 
 insert into category(id, name) values(1, 'salad');
 insert into category(id, name) values(2, 'pasta');
 insert into category(id, name) values(3, 'chicken');
 insert into category(id, name) values (4, 'dessert');
+insert into category(id, name) values (5, 'soup');
 
 insert into ingredient(id, name, quantity, recipe_id) values(1, 'eggs', '2', 1);
 insert into ingredient(id, name, quantity, recipe_id) values(2, 'egg yolks', '3', 1);
@@ -33,6 +34,15 @@ insert into ingredient(id, name, quantity, recipe_id) values (9, 'Flour', '2 cup
 insert into ingredient(id, name, quantity, recipe_id) values (10, 'Sugar', '1.5 cups', 3);
 insert into ingredient(id, name, quantity, recipe_id) values (11, 'Cocoa powder', '0.5 cups', 3);
 
+insert into ingredient(id, name, quantity, recipe_id) values (12, 'Chicken broth',          '4 cups',   4);
+insert into ingredient(id, name, quantity, recipe_id) values(13, 'Cooked shredded chicken','2 cups',   4);
+insert into ingredient(id, name, quantity, recipe_id) values(14, 'Egg noodles',            '2 cups',   4);
+insert into ingredient(id, name, quantity, recipe_id) values(15, 'Carrots, diced',         '1 cup',    4);
+insert into ingredient(id, name, quantity, recipe_id) values(16, 'Celery, diced',          '1 cup',    4);
+insert into ingredient(id, name, quantity, recipe_id) values(17, 'Salt','to taste', 4);
+insert into ingredient(id, name, quantity, recipe_id) values(18, 'Black pepper','to taste', 4);
+
+
 
 
 insert into step (id, step_number, instruction, recipe_id) values (1, 1, 'In a medium bowl, whisk together the eggs, egg yolks, Parmesan, Pecorino Romano, salt, and pepper.', 1);
@@ -46,9 +56,20 @@ insert into step(id, step_number, instruction, recipe_id) values (7, 1, 'Mix all
 insert into step(id, step_number, instruction, recipe_id) values (8, 2, 'Add wet ingredients and mix until smooth.', 3);
 insert into step(id, step_number, instruction, recipe_id) values (9, 3, 'Pour into pan and bake at 180°C for 40 minutes.', 3);
 
+insert into step(id, step_number, instruction, recipe_id) values(10, 1, 'In a large pot sauté carrots and celery for 3–4 min.',             4);
+insert into step(id, step_number, instruction, recipe_id) values(11, 2, 'Add broth and shredded chicken; bring to a gentle boil.',          4);
+insert into step(id, step_number, instruction, recipe_id) values(12, 3, 'Stir in noodles; simmer 8–10 min until tender. Season to taste.',  4);
+
+
+
 
 
 insert into recipe_category (recipe_id, category_id) values(1,2);
 insert into recipe_category(recipe_id, category_id)values (3, 4);
+insert into recipe_category(recipe_id, category_id) values (4, 5);
+
 
 insert into review (id, rating, comment, created_at, reviewer_id, recipe_id) values (1, 5, 'Very good', '2024-05-13T15:30:00', 1, 1);
+insert into review(id, rating, comment, created_at, reviewer_id, recipe_id) values (2, 4, 'Good flavour but a bit salty for me.',      '2024-05-14T12:10:00', 1, 1);
+insert into review(id, rating, comment, created_at, reviewer_id, recipe_id) values (3, 5, 'Rich, moist and absolutely delicious cake!', '2024-05-15T09:20:00', 1, 3);
+insert into review(id, rating, comment, created_at, reviewer_id, recipe_id) values (4, 5, 'Comforting soup—just like grandma made.',    '2024-05-16T18:45:00', 1, 4);
